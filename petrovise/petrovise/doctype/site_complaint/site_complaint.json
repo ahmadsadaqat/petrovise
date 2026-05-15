@@ -1,0 +1,173 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-05-15 06:26:38.427738",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_5lhg",
+  "amended_from",
+  "station",
+  "photo_attachment",
+  "column_break_fsmy",
+  "issue_category",
+  "status",
+  "assigned_asm",
+  "description_section",
+  "description",
+  "resolution_and_tracking_section",
+  "resolution_remarks",
+  "section_break_kufn",
+  "opened_at",
+  "column_break_xste",
+  "resolved_at"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_5lhg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Site Complaint",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "station",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Station",
+   "options": "Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "photo_attachment",
+   "fieldtype": "Attach Image",
+   "label": "Image"
+  },
+  {
+   "fieldname": "column_break_fsmy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "issue_category",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Issue",
+   "options": "Equipment Damage\nRepair Request\nGeneral Complaint",
+   "reqd": 1
+  },
+  {
+   "default": "Open",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Open\nUnder Review\nResolved",
+   "reqd": 1
+  },
+  {
+   "fieldname": "assigned_asm",
+   "fieldtype": "Link",
+   "label": "Assigned ASM",
+   "options": "User"
+  },
+  {
+   "fieldname": "description_section",
+   "fieldtype": "Section Break",
+   "label": "Description"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text"
+  },
+  {
+   "fieldname": "resolution_and_tracking_section",
+   "fieldtype": "Section Break",
+   "label": "Resolution and Tracking"
+  },
+  {
+   "fieldname": "resolution_remarks",
+   "fieldtype": "Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "section_break_kufn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "opened_at",
+   "fieldtype": "Datetime",
+   "label": "Opened at",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_xste",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "resolved_at",
+   "fieldtype": "Datetime",
+   "label": "Resolved at",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-05-15 06:41:04.573722",
+ "modified_by": "Administrator",
+ "module": "Petrovise",
+ "name": "Site Complaint",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "write": 1,
+   "submit": 1,
+   "role": "Petrovise ASM",
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "report": 1,
+   "share": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "write": 1,
+   "submit": 1,
+   "role": "Petrovise Finance",
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "report": 1,
+   "share": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

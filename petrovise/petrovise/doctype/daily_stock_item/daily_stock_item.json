@@ -1,0 +1,80 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-05-15 02:34:51.330586",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "item_name",
+  "received_qty",
+  "sales_volume",
+  "column_break_othd",
+  "opening_dip",
+  "closing_dip"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "item_code.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Name"
+  },
+  {
+   "default": "0",
+   "description": "Manual entry if tanker arrives",
+   "fieldname": "received_qty",
+   "fieldtype": "Float",
+   "label": "Received Qty"
+  },
+  {
+   "fieldname": "sales_volume",
+   "fieldtype": "Float",
+   "label": "Sales Volume",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_othd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Auto-fetched from yesterday",
+   "fieldname": "opening_dip",
+   "fieldtype": "Float",
+   "label": "Opening Dip",
+   "read_only": 1
+  },
+  {
+   "description": "Manual entry by dealer",
+   "fieldname": "closing_dip",
+   "fieldtype": "Float",
+   "label": "Closing Dip",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-05-15 05:12:01.323494",
+ "modified_by": "Administrator",
+ "module": "Petrovise",
+ "name": "Daily Stock Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

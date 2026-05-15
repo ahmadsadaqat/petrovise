@@ -1,0 +1,157 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-05-15 17:59:40.083986",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_tyo5",
+  "amended_from",
+  "station",
+  "section_break_ghnd",
+  "order_date",
+  "column_break_ngoa",
+  "status",
+  "items_section",
+  "order_details",
+  "total_amount",
+  "finance_and_tracking_section",
+  "payment_slip",
+  "finance_release"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_tyo5",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Fuel Order",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "station",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Station",
+   "options": "Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_ghnd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "order_date",
+   "fieldtype": "Date",
+   "label": "Order Date"
+  },
+  {
+   "fieldname": "column_break_ngoa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nUnpaid\nPending Finance Approval\nApproved\nDelivered"
+  },
+  {
+   "fieldname": "items_section",
+   "fieldtype": "Section Break",
+   "label": "Items"
+  },
+  {
+   "fieldname": "order_details",
+   "fieldtype": "Table",
+   "label": "Order Details",
+   "options": "Fuel Order Item"
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "finance_and_tracking_section",
+   "fieldtype": "Section Break",
+   "label": "Finance and Tracking"
+  },
+  {
+   "fieldname": "payment_slip",
+   "fieldtype": "Attach Image",
+   "label": "Payment Slip",
+   "allow_on_submit": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "finance_release",
+   "fieldtype": "Check",
+   "label": "Released ",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-05-15 18:09:15.891745",
+ "modified_by": "Administrator",
+ "module": "Petrovise",
+ "name": "Fuel Order",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "write": 1,
+   "submit": 1,
+   "role": "Petrovise ASM",
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "report": 1,
+   "share": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "write": 1,
+   "submit": 1,
+   "role": "Petrovise Finance",
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "report": 1,
+   "share": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

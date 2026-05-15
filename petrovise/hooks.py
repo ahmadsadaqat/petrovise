@@ -256,3 +256,21 @@ app_license = "mit"
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
 
+fixtures = [
+    {
+        "dt": "Custom Field",
+        "filters": [
+            [
+                "dt", "=", "Warehouse"
+            ]
+        ]
+    },
+    {
+        "dt": "Role",
+        "filters": [
+            [
+                "name", "in", ["Petrovise ASM", "Petrovise Finance"]
+            ]
+        ]
+    }
+]
