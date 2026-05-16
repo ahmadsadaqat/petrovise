@@ -38,9 +38,23 @@
    "label": "Received Qty"
   },
   {
-   "fieldname": "sales_volume",
+   "fieldname": "available_quantity",
    "fieldtype": "Float",
-   "label": "Sales Volume",
+   "in_list_view": 1,
+   "label": "Available Quantity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "in_transit",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "In Transit",
+   "read_only": 1
+  },
+  {
+   "fieldname": "daily_sales",
+   "fieldtype": "Float",
+   "label": "Daily Sales",
    "read_only": 1
   },
   {

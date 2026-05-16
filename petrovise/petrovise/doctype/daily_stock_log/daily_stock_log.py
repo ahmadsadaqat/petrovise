@@ -47,8 +47,9 @@ class DailyStockLog(Document):
                     if closing > total_available:
                         frappe.throw(f"Row {row.idx}: Closing dip ({closing}) cannot be greater than total available stock ({total_available}) for {row.item_code}.")
 
-                    # Calculate
-                    row.sales_volume = total_available - closing
+                    # Calculate Daily Sales on Save
+                    row.daily_sales = total_available - closing
+
 @frappe.whitelist()
 def get_previous_closing_dip(station, log_date, item_code):
     prev_log = frappe.get_all(
@@ -70,3 +71,42 @@ def get_previous_closing_dip(station, log_date, item_code):
         )
         return flt(closing_dip)
     return 0.0
+
+@frappe.whitelist()
+def get_avg_daily_sales(station, log_date, item_code):
+    """Calculate the average daily sales volume from the last 7 submitted stock logs."""
+    from frappe.utils import add_days
+
+    prev_logs = frappe.get_all(
+        "Daily Stock Log",
+        filters={
+            "station": station,
+            "log_date": ("<", log_date),
+            "docstatus": 1
+        },
+        fields=["name"],
+        order_by="log_date desc",
+        limit=7
+    )
+
+    if not prev_logs:
+        return {"avg_sales": 0, "days_counted": 0}
+
+    parent_names = [log.name for log in prev_logs]
+    items = frappe.get_all(
+        "Daily Stock Item",
+        filters={
+            "parent": ("in", parent_names),
+            "item_code": item_code
+        },
+        fields=["daily_sales"]
+    )
+
+    if not items:
+        return {"avg_sales": 0, "days_counted": 0}
+
+    total_sales = sum(flt(item.daily_sales) for item in items)
+    days_counted = len(items)
+    avg_sales = total_sales / days_counted if days_counted else 0
+
+    return {"avg_sales": avg_sales, "days_counted": days_counted}
