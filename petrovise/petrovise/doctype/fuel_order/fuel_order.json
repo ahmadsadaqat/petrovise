@@ -39,7 +39,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Station",
-   "options": "Warehouse",
+   "options": "Fuel Station",
    "reqd": 1
   },
   {

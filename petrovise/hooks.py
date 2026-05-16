@@ -43,7 +43,9 @@ app_license = "mit"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {
+    "Sales Order": "public/js/sales_order.js"
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -138,13 +140,11 @@ app_license = "mit"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Sales Order": {
+		"validate": "petrovise.api.check_credit_limit_on_save",
+	}
+}
 
 # Scheduled Tasks
 # ---------------
@@ -176,9 +176,9 @@ app_license = "mit"
 # ------------------------------
 #
 # Specify custom mixins to extend the standard doctype controller.
-# extend_doctype_class = {
-# 	"Task": "petrovise.custom.task.CustomTaskMixin"
-# }
+extend_doctype_class = {
+	"Sales Order": "petrovise.overrides.sales_order.SalesOrderOverride"
+}
 
 # Overriding Methods
 # ------------------------------
@@ -261,7 +261,7 @@ fixtures = [
         "dt": "Custom Field",
         "filters": [
             [
-                "dt", "=", "Warehouse"
+                "dt", "in", ["Sales Order", "Warehouse"]
             ]
         ]
     },

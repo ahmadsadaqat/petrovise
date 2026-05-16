@@ -6,7 +6,7 @@ class FuelOrder(Document):
     def validate(self):
         self.calculate_totals()
         
-        station_limit = frappe.db.get_value("Warehouse", self.station, "custom_station_credit_limit")
+        station_limit = frappe.db.get_value("Fuel Station", self.station, "credit_limit")
         station_limit = flt(station_limit)
         if self.total_amount > station_limit and not self.finance_release:
             frappe.msgprint(f"Warning: This order ({self.total_amount:,.2f}) exceeds the station's available credit limit ({station_limit:,.2f}). You will not be able to submit it.", indicator="orange")
@@ -20,7 +20,7 @@ class FuelOrder(Document):
         self.total_amount = total
 
     def before_submit(self):
-        station_limit = frappe.db.get_value("Warehouse", self.station, "custom_station_credit_limit")
+        station_limit = frappe.db.get_value("Fuel Station", self.station, "credit_limit")
         station_limit = flt(station_limit)
         
         if self.total_amount > station_limit and not self.finance_release:
@@ -38,12 +38,12 @@ class FuelOrder(Document):
             self.process_payment_slip()
 
     def process_payment_slip(self):
-        station_limit = frappe.db.get_value("Warehouse", self.station, "custom_station_credit_limit")
+        station_limit = frappe.db.get_value("Fuel Station", self.station, "credit_limit")
         station_limit = flt(station_limit)
 
         # Deduct limit
         new_limit = station_limit - self.total_amount
-        frappe.db.set_value("Warehouse", self.station, "custom_station_credit_limit", new_limit)
+        frappe.db.set_value("Fuel Station", self.station, "credit_limit", new_limit)
 
         # Update status
         self.db_set("status", "Pending Finance Approval")
@@ -52,8 +52,8 @@ class FuelOrder(Document):
     def on_cancel(self):
         # Refund limit if it was already processed
         if self.status not in ["Draft", "Unpaid"]:
-            station_limit = frappe.db.get_value("Warehouse", self.station, "custom_station_credit_limit")
+            station_limit = frappe.db.get_value("Fuel Station", self.station, "credit_limit")
             station_limit = flt(station_limit)
             refunded_limit = station_limit + self.total_amount
-            frappe.db.set_value("Warehouse", self.station, "custom_station_credit_limit", refunded_limit)
+            frappe.db.set_value("Fuel Station", self.station, "credit_limit", refunded_limit)
             frappe.msgprint(f"Order cancelled. Credit limit of {self.total_amount:,.2f} refunded to {self.station}.", indicator="orange")
