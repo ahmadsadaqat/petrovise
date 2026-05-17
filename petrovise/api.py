@@ -130,20 +130,24 @@ def get_mobile_dashboard(customer, station):
         "credit_limit"
     ) or 0.0
 
-    # 3. Fetch the Latest Stock Log (Linked to Warehouse/Station)
-    latest_stock = frappe.get_all(
+    # 3. Fetch the Latest Stock Log (Linked to Station)
+    latest_stock_list = frappe.get_all(
         "Daily Stock Log",
         filters={"station": station, "docstatus": 1},
         fields=["name", "log_date"],
         order_by="log_date desc",
         limit=1
     )
+    latest_stock = None
+    if latest_stock_list:
+        # Fetch full document to include the child table (stock_details)
+        latest_stock = frappe.get_doc("Daily Stock Log", latest_stock_list[0].name).as_dict()
 
-    # 4. Fetch Active Complaints (Linked to Warehouse/Station)
+    # 4. Fetch Active Complaints (Linked to Station)
     open_complaints = frappe.get_all(
         "Site Complaint",
         filters={"station": station, "status": ["in", ["Open", "Under Review"]]},
-        fields=["name", "issue_category", "status", "opened_at"],
+        fields=["name", "issue_category", "status", "opened_at", "description", "photo_attachment"],
         order_by="opened_at desc"
     )
 
@@ -155,7 +159,10 @@ def get_mobile_dashboard(customer, station):
             "docstatus": ["<", 2], # Fetch Drafts (0) and Submitted (1), exclude Cancelled (2)
             "status": ["not in", ["Completed", "Closed"]]
         },
-        fields=["name", "transaction_date", "grand_total", "status", "custom_released"],
+        fields=[
+            "name", "transaction_date", "grand_total", "status", 
+            "custom_released", "custom_station", "custom_payment_slip"
+        ],
         order_by="transaction_date desc",
         limit=5
     )
@@ -165,7 +172,7 @@ def get_mobile_dashboard(customer, station):
         "customer": customer,
         "station_name": station,
         "credit_limit": flt(credit_limit),
-        "latest_stock_log": latest_stock if latest_stock else None,
+        "latest_stock_log": latest_stock,
         "active_complaints": open_complaints,
         "pending_orders": pending_orders
     }
