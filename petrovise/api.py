@@ -130,6 +130,14 @@ def get_mobile_dashboard(customer, station):
         "credit_limit"
     ) or 0.0
 
+    # 2b. Fetch Fuel Station details
+    station_details = frappe.db.get_value(
+        "Fuel Station", 
+        station, 
+        ["lead_time", "minimum_stock"], 
+        as_dict=True
+    ) or {}
+
     # 3. Fetch the Latest Stock Log (Linked to Station)
     latest_stock_list = frappe.get_all(
         "Daily Stock Log",
@@ -172,6 +180,8 @@ def get_mobile_dashboard(customer, station):
         "customer": customer,
         "station_name": station,
         "credit_limit": flt(credit_limit),
+        "lead_time": flt(station_details.get("lead_time", 0)),
+        "minimum_stock": flt(station_details.get("minimum_stock", 0)),
         "latest_stock_log": latest_stock,
         "active_complaints": open_complaints,
         "pending_orders": pending_orders
