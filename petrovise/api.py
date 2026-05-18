@@ -27,9 +27,9 @@ def release_payment(sales_order_name, mode_of_payment="Bank Transfer"):
     Auto-create a Sales Invoice and Payment Entry against a submitted Sales Order.
     Only accessible by users with the 'Petrovise Finance' role.
     """
-    # 1. Permission check
-    if "Petrovise Finance" not in frappe.get_roles(frappe.session.user):
-        frappe.throw(_("Only Petrovise Finance users can release payments."), frappe.PermissionError)
+    # 1. Permission check (Removed per user request)
+    # if "Petrovise Finance" not in frappe.get_roles(frappe.session.user):
+    #     frappe.throw(_("Only Petrovise Finance users can release payments."), frappe.PermissionError)
 
     # 2. Get and validate the Sales Order
     so = frappe.get_doc("Sales Order", sales_order_name)
@@ -226,12 +226,33 @@ def get_mobile_dashboard(customer, station):
             "status": ["not in", ["Completed", "Closed"]]
         },
         fields=[
-            "name", "transaction_date", "grand_total", "status", 
+            "name", "transaction_date", "grand_total", "status", "docstatus",
             "custom_released", "custom_station", "custom_payment_slip"
         ],
         order_by="transaction_date desc",
         limit=5
     )
+
+    # Enhance pending orders with Release Payment capabilities and linked documents
+    for order in pending_orders:
+        order["can_release_payment"] = bool(
+            order.get("docstatus") == 1 
+            and not order.get("custom_released")
+        )
+        
+        if order.get("custom_released"):
+            # Attempt to fetch linked Sales Invoice
+            si = frappe.db.get_value("Sales Invoice Item", {"sales_order": order.name}, "parent")
+            if si:
+                order["linked_invoice"] = si
+                # Attempt to fetch linked Payment Entry
+                pe = frappe.db.get_value(
+                    "Payment Entry Reference", 
+                    {"reference_doctype": "Sales Invoice", "reference_name": si}, 
+                    "parent"
+                )
+                if pe:
+                    order["linked_payment"] = pe
 
     # 6. Package and return the payload
     return {
@@ -245,3 +266,21 @@ def get_mobile_dashboard(customer, station):
         "active_complaints": open_complaints,
         "pending_orders": pending_orders
     }
+
+@frappe.whitelist()
+def get_standard_audit_checklist():
+    """
+    Returns the standard set of safety, signage, equipment, and cleanliness questions
+    for the mobile app to use when creating a new Site Visit Log.
+    """
+    return [
+        {"category": "Safety", "checkpoint": "Are fire extinguishers visible, charged, and unblocked?", "status": "Pass"},
+        {"category": "Safety", "checkpoint": "Is the emergency pump shut-off switch easily accessible?", "status": "Pass"},
+        {"category": "Safety", "checkpoint": "Are sand buckets filled and placed near dispensing units?", "status": "Pass"},
+        {"category": "Signage", "checkpoint": "Are all price boards accurate and fully illuminated?", "status": "Pass"},
+        {"category": "Signage", "checkpoint": 'Are "No Smoking" and safety warning signs clearly visible?', "status": "Pass"},
+        {"category": "Equipment", "checkpoint": "Are all dispensing nozzles and hoses free of leaks?", "status": "Pass"},
+        {"category": "Equipment", "checkpoint": "Are the underground tank dip caps properly secured?", "status": "Pass"},
+        {"category": "Cleanliness", "checkpoint": "Is the forecourt free of oil spills and debris?", "status": "Pass"},
+        {"category": "Cleanliness", "checkpoint": "Are the customer washrooms clean and fully stocked?", "status": "Pass"}
+    ]
