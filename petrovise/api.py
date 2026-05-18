@@ -147,9 +147,67 @@ def get_mobile_dashboard(customer, station):
         limit=1
     )
     latest_stock = None
+    dry_out_alerts = []
     if latest_stock_list:
         # Fetch full document to include the child table (stock_details)
         latest_stock = frappe.get_doc("Daily Stock Log", latest_stock_list[0].name).as_dict()
+
+        # Calculate Dry Out Alerts for mobile app
+        from petrovise.petrovise.doctype.daily_stock_log.daily_stock_log import get_avg_daily_sales
+        
+        lead_time = flt(station_details.get("lead_time", 0))
+        min_stock = flt(station_details.get("minimum_stock", 0))
+        
+        for row in latest_stock.get("stock_details", []):
+            closing = flt(row.get("closing_dip", 0))
+            item_code = row.get("item_code")
+            
+            if not item_code or closing <= 0:
+                continue
+                
+            if min_stock > 0 and closing < min_stock:
+                dry_out_alerts.append({
+                    "item_code": item_code,
+                    "level": "Warning",
+                    "title": "Below Minimum Stock",
+                    "message": f"{item_code} closing stock ({closing:.0f} L) is below minimum stock ({min_stock:.0f} L). Please place a fuel order!"
+                })
+                
+            avg_data = get_avg_daily_sales(station, latest_stock.get("log_date"), item_code)
+            hist_avg = flt(avg_data.get("avg_sales", 0))
+            days_counted = flt(avg_data.get("days_counted", 0))
+            today_sales = (flt(row.get("opening_dip", 0)) + flt(row.get("received_qty", 0))) - closing
+            
+            avg_sales = 0
+            if days_counted > 0 and hist_avg > 0:
+                avg_sales = ((hist_avg * days_counted) + today_sales) / (days_counted + 1)
+            elif today_sales > 0:
+                avg_sales = today_sales
+                
+            if avg_sales > 0:
+                days_remaining = closing / avg_sales
+                if lead_time > 0:
+                    if days_remaining < lead_time:
+                        dry_out_alerts.append({
+                            "item_code": item_code,
+                            "level": "Critical",
+                            "title": "Critical Dry Out Alert",
+                            "message": f"CRITICAL: Your stock will run out in {days_remaining:.1f} days, but delivery takes {lead_time} days. Even if you order right now, you will dry out {(lead_time - days_remaining):.1f} days before delivery arrives!"
+                        })
+                    elif days_remaining < (lead_time + 2):
+                        dry_out_alerts.append({
+                            "item_code": item_code,
+                            "level": "Warning",
+                            "title": "Order Now to Avoid Dry Out",
+                            "message": f"ORDER TODAY: Your stock will last {days_remaining:.1f} days and delivery takes {lead_time} days. If you don't place an order today, you risk running dry!"
+                        })
+                    elif days_remaining < (lead_time + 5):
+                        dry_out_alerts.append({
+                            "item_code": item_code,
+                            "level": "Info",
+                            "title": "5-Day Order Reminder",
+                            "message": f"PLAN AHEAD: Your stock will last {days_remaining:.1f} days and delivery takes {lead_time} days. You have approximately {(days_remaining - lead_time):.1f} days to place an order before it becomes critical."
+                        })
 
     # 4. Fetch Active Complaints (Linked to Station)
     open_complaints = frappe.get_all(
@@ -183,6 +241,7 @@ def get_mobile_dashboard(customer, station):
         "lead_time": flt(station_details.get("lead_time", 0)),
         "minimum_stock": flt(station_details.get("minimum_stock", 0)),
         "latest_stock_log": latest_stock,
+        "dry_out_alerts": dry_out_alerts,
         "active_complaints": open_complaints,
         "pending_orders": pending_orders
     }
