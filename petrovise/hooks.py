@@ -269,7 +269,7 @@ fixtures = [
         "dt": "Role",
         "filters": [
             [
-                "name", "in", ["Petrovise ASM", "Petrovise Finance"]
+                "name", "in", ["Petrovise ASM", "Petrovise Finance", "Petrovise Dealer"]
             ]
         ]
     },
@@ -280,7 +280,7 @@ fixtures = [
                 "parent", "=", "Sales Order"
             ],
             [
-                "role", "=", "Petrovise ASM"
+                "role", "in", ["Petrovise ASM", "Petrovise Dealer"]
             ]
         ]
     }
