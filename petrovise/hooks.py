@@ -272,5 +272,16 @@ fixtures = [
                 "name", "in", ["Petrovise ASM", "Petrovise Finance"]
             ]
         ]
+    },
+    {
+        "dt": "Custom DocPerm",
+        "filters": [
+            [
+                "parent", "=", "Sales Order"
+            ],
+            [
+                "role", "=", "Petrovise ASM"
+            ]
+        ]
     }
 ]

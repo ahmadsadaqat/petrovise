@@ -1,0 +1,28 @@
+[
+ {
+  "amend": 0,
+  "cancel": 0,
+  "create": 1,
+  "delete": 0,
+  "docstatus": 0,
+  "doctype": "Custom DocPerm",
+  "email": 0,
+  "export": 1,
+  "if_owner": 0,
+  "impersonate": 0,
+  "import": 0,
+  "mask": 0,
+  "modified": "2026-05-18 09:27:57.070973",
+  "name": "l8cj2o95qi",
+  "parent": "Sales Order",
+  "permlevel": 0,
+  "print": 0,
+  "read": 1,
+  "report": 0,
+  "role": "Petrovise ASM",
+  "select": 0,
+  "share": 0,
+  "submit": 1,
+  "write": 1
+ }
+]
